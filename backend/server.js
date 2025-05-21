@@ -5,6 +5,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import session from "express-session";
 import { sql } from "./config/db.js";
+import passport from "passport";
+import flash from "express-flash";
+import authRoutes from "./routes/authRoutes.js";
+import initializePassport from "./config/passport.js";
+
+initializePassport(passport); // Passport configuration
 
 dotenv.config();
 const app = express();
@@ -15,6 +21,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(cors()); // for handling CORS
 app.use(helmet());
 app.use(morgan("dev"));
+app.use(flash());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -22,10 +29,14 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
+
+app.use("/api/auth", authRoutes);
 
 async function initializeDatabase() {
   try {
