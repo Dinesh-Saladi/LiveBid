@@ -16,15 +16,16 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { toast, Toaster } from "sonner";
 
 export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setMail] = useState("");
-  const { user, login } = useAuthStore();
+  const { user, login, loading } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       navigate("/dashboard");
     }
   }, [user, navigate]);
@@ -34,6 +35,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
+      <Toaster />
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Welcome back!</CardTitle>
@@ -41,7 +43,26 @@ export default function Login() {
           <CardDescription>It's nice to see you again.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const loginPromise = login(email, password);
+              console.log("Logging in user:", { email, password });
+              toast.promise(loginPromise, {
+                loading: "Logging in...",
+                success: (data) => data.message,
+                error: (err) => err.message || "Login failed",
+              });
+              try {
+                await loginPromise;
+                setTimeout(() => {
+                  navigate("/dashboard");
+                }, 1000); // 1 second delay
+              } catch (error) {
+                // error already shown by toast
+              }
+            }}
+          >
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">Mail</Label>
@@ -66,7 +87,7 @@ export default function Login() {
               </div>
               <div>
                 <Button
-                  disabled={!email.length || password.length >= 8}
+                  disabled={!email.length || password.length < 8}
                   className="w-full cursor-pointer"
                   type="submit"
                 >

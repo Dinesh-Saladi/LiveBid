@@ -5,15 +5,16 @@ const BASE_URL = "http://localhost:5000/api";
 
 export const useAuthStore = create((set, get) => ({
   user: null,
-  setUser: (user) => set({ user }),
+  loading: true,
+  setUser: (user) => set({ user, loading: false }),
   logout: async () => {
     set({ user: null });
-    try{
-        const response = await axios.post(`${BASE_URL}/auth/logout`);
-        return { success: true, message: "Successfully Logged Out" };
-    }catch (error) {
-        //   alert(error.response.data.message);
-        throw new Error("Unable to Logout. Please try again later");
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/logout`);
+      return { success: true, message: "Successfully Logged Out" };
+    } catch (error) {
+      //   alert(error.response.data.message);
+      throw new Error("Unable to Logout. Please try again later");
     }
   },
 
@@ -23,7 +24,9 @@ export const useAuthStore = create((set, get) => ({
         email,
         password,
       });
+      console.log("received data: " + response.data);
       set({ user: response.data.user });
+      console.log(user);
       return { success: true, message: response.data.message };
     } catch (error) {
       //   alert(error.response.data.message);

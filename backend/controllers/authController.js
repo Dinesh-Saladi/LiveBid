@@ -31,7 +31,9 @@ export const register = async (req, res) => {
   }
 };
 
-export const logOut = async (req, res) => {
-  req.logout();
-  res.json({ message: "Logged out successfully" });
+export const logOut = (req, res, next) => {
+  req.logout(function(err) {
+    if (err) return next(err);
+    res.json({ message: "Logged out successfully" });
+  });
 };

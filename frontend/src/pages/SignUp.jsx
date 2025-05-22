@@ -21,10 +21,10 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [email, setMail] = useState("");
   const [name, setName] = useState("");
-  const { user, register } = useAuthStore();
-  const navigate = useNavigate;
+  const { user, register, loading } = useAuthStore();
+  const navigate = useNavigate();
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       navigate("/dashboard");
     }
   }, [user, navigate]);
@@ -57,7 +57,9 @@ export default function SignUp() {
               });
               try {
                 await registerPromise;
-                navigate("/login");
+                setTimeout(() => {
+                  navigate("/login");
+                }, 1000); // 1 second delay
                 // Optional cleanup
                 // setName("");
                 // setMail("");

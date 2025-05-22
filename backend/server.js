@@ -18,7 +18,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(cors()); // for handling CORS
+app.use(
+  cors({
+    origin: "http://localhost:5173", // your frontend origin
+    credentials: true, // allow cookies to be sent
+  })
+);
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(flash());
@@ -27,8 +32,12 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
+    },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
