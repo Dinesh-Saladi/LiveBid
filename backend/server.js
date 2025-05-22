@@ -14,13 +14,13 @@ initializePassport(passport); // Passport configuration
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(
   cors({
-    origin: "http://localhost:5173", // your frontend origin
+    origin: process.env.FRONTEND_URL, // your frontend origin
     credentials: true, // allow cookies to be sent
   })
 );

@@ -6,14 +6,15 @@ import DashBoard from "./pages/DashBoard";
 import axios from "axios";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = import.meta.env.VITE_BACKEND_API;
 
 function App() {
   const { setUser, loading } = useAuthStore();
   useEffect(() => {
-    axios.get(`${BASE_URL}/auth/me`)
+    axios
+      .get(`${BASE_URL}/auth/me`)
       .then((res) => {
         setUser(res.data.user);
       })
@@ -25,7 +26,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/"  element={<Home />} />
+        <Route exact path="/" element={<Home />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/dashboard" element={<DashBoard />} />
