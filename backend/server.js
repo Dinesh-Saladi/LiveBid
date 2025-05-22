@@ -52,6 +52,7 @@ app.use(
       secure: true, // Required for HTTPS
       sameSite: "None", // Required for cross-origin
       httpOnly: true, // Optional, for security
+      domain: process.env.BACKEND_DOMAIN, // Optional, for cross-origin
     },
   })
 );
