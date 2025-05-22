@@ -27,13 +27,31 @@ app.use(
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(flash());
+
+//FOR LOCAL SESSION
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
+//     },
+//   })
+// );
+
+//FOR DEPLOYMENT SESSION
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
+      maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+      secure: true, // Required for HTTPS
+      sameSite: "None", // Required for cross-origin
+      httpOnly: true, // Optional, for security
     },
   })
 );
