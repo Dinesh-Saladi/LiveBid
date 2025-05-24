@@ -6,6 +6,7 @@ import DashBoard from "./pages/DashBoard";
 import axios from "axios";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
+import { ThemeProvider } from "@/components/ThemeProvider";
 axios.defaults.withCredentials = true;
 
 const BASE_URL = import.meta.env.VITE_BACKEND_API;
@@ -24,14 +25,16 @@ function App() {
   }, []);
   if (loading) return null;
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="/login" element={<Login />} />
-        <Route exact path="/signup" element={<SignUp />} />
-        <Route exact path="/dashboard" element={<DashBoard />} />
-      </Routes>
-    </Router>
+    // <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/signup" element={<SignUp />} />
+          <Route exact path="/dashboard" element={<DashBoard />} />
+        </Routes>
+      </Router>
+    // </ThemeProvider>
   );
 }
 

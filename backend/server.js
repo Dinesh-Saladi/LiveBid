@@ -28,34 +28,36 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(flash());
 
-//FOR LOCAL SESSION
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
-//     },
-//   })
-// );
-
-//FOR DEPLOYMENT SESSION
-app.set("trust proxy", 1);
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
-      secure: true, // Required for HTTPS
-      sameSite: "None", // Required for cross-origin
-      httpOnly: true, // Optional, for security
-      domain: process.env.BACKEND_DOMAIN, // Optional, for cross-origin
-    },
-  })
-);
+if (process.env.NODE_ENV === "production") {
+  //FOR DEPLOYMENT SESSION
+  app.set("trust proxy", 1);
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+        secure: true, // Required for HTTPS
+        sameSite: "None", // Required for cross-origin
+        httpOnly: true, // Optional, for security
+        domain: process.env.BACKEND_DOMAIN, // Optional, for cross-origin
+      },
+    })
+  );
+} else {
+  // FOR LOCAL SESSION
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
+      },
+    })
+  );
+}
 
 app.use(passport.initialize());
 app.use(passport.session());
