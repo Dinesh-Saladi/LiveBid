@@ -31,9 +31,11 @@ function NavBar() {
             whileTap={{ scale: 0.95 }}
             transition={{ duration: 0.5 }}
           >
-            <Button variant="outline" className="inline-flex">
-              <Link to="/login">Sign In</Link>
-            </Button>
+            <Link to="/login">
+              <Button variant="outline" className="inline-flex">
+                Sign In
+              </Button>
+            </Link>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -41,9 +43,9 @@ function NavBar() {
             transition={{ duration: 0.5 }}
             className="hidden sm:inline-flex"
           >
-            <Button>
-              <Link to="/signup">Get Started</Link>
-            </Button>
+            <Link to="/signup">
+              <Button>Get Started</Button>
+            </Link>
           </motion.div>
         </div>
       </div>

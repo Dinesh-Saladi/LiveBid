@@ -25,9 +25,11 @@ function Cta() {
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
-          <Button size="lg" variant="secondary" className="mt-4">
-            <Link to="/signup">Start Bidding Now</Link>
-          </Button>
+          <Link to="/signup">
+            <Button size="lg" variant="secondary" className="mt-4">
+              Start Bidding Now
+            </Button>
+          </Link>
         </motion.div>
       </motion.div>
     </section>

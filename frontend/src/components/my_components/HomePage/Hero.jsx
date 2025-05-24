@@ -7,8 +7,10 @@ import { motion } from "framer-motion";
 function Hero() {
   return (
     <section className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-slate-200 dark:from-indigo-950 dark:to-slate-900
-" />
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-blue-100 to-slate-200 dark:from-indigo-950 dark:to-slate-900
+"
+      />
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -31,10 +33,12 @@ function Hero() {
           transition={{ type: "spring", stiffness: 300 }}
           className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
         >
-          <Button size="lg" className="group">
-            <Link to="/signup">Get Started</Link>
-            <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Button>
+          <Link to="/signup">
+            <Button size="lg" className="group">
+              Get Started
+              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </Link>
         </motion.div>
       </motion.div>
     </section>
