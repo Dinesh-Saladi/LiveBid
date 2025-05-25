@@ -42,7 +42,7 @@ const navItems = [
   },
 ];
 
-function Sidebar() {
+function SideBar() {
   const location = useLocation();
   const { logout } = useAuthStore();
   const navigate = useNavigate();
@@ -104,4 +104,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SideBar;

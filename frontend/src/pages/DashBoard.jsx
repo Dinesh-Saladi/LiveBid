@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
-import Sidebar from "@/components/my_components/DashBoard/Sidebar";
+import SideBar from "../components/my_components/DashBoard/SideBar";
 import { Routes, Route } from "react-router-dom";
 import DashBoardHome from "../components/my_components/DashBoard/DashBoardHome";
 import MyAuctions from "../components/my_components/DashBoard/MyAuctions";
@@ -28,7 +28,7 @@ function DashBoard() {
   return (
     <div className="flex h-screen bg-background">
       <Toaster />
-      <Sidebar />
+      <SideBar />
       <main className="flex-1 overflow-y-auto">
         <Routes>
           <Route path="/" element={<DashBoardHome />} />
