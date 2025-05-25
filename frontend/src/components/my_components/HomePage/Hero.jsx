@@ -8,7 +8,7 @@ function Hero() {
   return (
     <section className="relative">
       <div
-        className="absolute inset-0 bg-gradient-to-br from-blue-100 to-slate-200 dark:from-indigo-950 dark:to-slate-900
+        className="absolute inset-0 bg-gradient-to-br from-blue-100 to-slate-200 dark:from-indigo-900 dark:to-slate-950
 "
       />
       <motion.div
@@ -20,7 +20,8 @@ function Hero() {
       >
         <div className="space-y-4 max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-            Where Every Second Counts Live Auctions, Real Wins
+            Where Every Second Counts <br/>
+            Live Auctions, Real Wins
           </h1>
           <p className="mx-auto max-w-[700px] text-slate-600 dark:text-slate-400 md:text-xl">
             Join real-time bidding wars and claim your win from anywhere,

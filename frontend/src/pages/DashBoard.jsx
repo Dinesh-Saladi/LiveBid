@@ -2,49 +2,44 @@ import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { toast, Toaster } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Toaster } from "sonner";
+import Sidebar from "@/components/my_components/DashBoard/Sidebar";
+import { Routes, Route } from "react-router-dom";
+import DashBoardHome from "../components/my_components/DashBoard/DashBoardHome";
+import MyAuctions from "../components/my_components/DashBoard/MyAuctions";
+import AllAuctions from "../components/my_components/DashBoard/AllAuctions";
+import Activity from "../components/my_components/DashBoard/Activity";
+import Account from "../components/my_components/DashBoard/Account";
+
+// Placeholder components for different sections
 
 function DashBoard() {
-  const { user, loading, logout } = useAuthStore();
+  const { user, loading } = useAuthStore();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
   }, [user, navigate]);
+
   if (!user) return null;
-  console.log(user);
+
   return (
-    <div>
+    <div className="flex h-screen bg-background">
       <Toaster />
-      <div className="flex flex-row items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold">LiveBid</h1>
-          <p className="text-lg text-gray-600">DashBoard</p>
-        </div>
-        <div className="m-2">
-          <Button
-            onClick={async () => {
-              const logoutPromise = logout();
-              toast.promise(logoutPromise, {
-                success: (data) => data.message,
-                error: (err) => err.message || "Logout failed",
-              });
-              try {
-                await logoutPromise;
-                navigate("/login");
-              } catch (err) {
-                // error already shown by toast
-              }
-            }}
-            className="cursor-pointer"
-          >
-            Log Out
-          </Button>
-        </div>
-      </div>
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto">
+        <Routes>
+          <Route path="/" element={<DashBoardHome />} />
+          <Route path="/my-auctions" element={<MyAuctions />} />
+          <Route path="/auctions" element={<AllAuctions />} />
+          <Route path="/activity" element={<Activity />} />
+          <Route path="/account" element={<Account />} />
+        </Routes>
+      </main>
     </div>
   );
 }
+
 export default DashBoard;
