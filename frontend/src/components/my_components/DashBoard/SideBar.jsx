@@ -48,7 +48,7 @@ function SideBar() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col h-screen border-r bg-card">
+    <div className="flex flex-col h-screen border-r bg-card shadow-md">
       <div className="p-6">
         <Link to="/dashboard" className="flex items-center gap-2">
           <Gavel className="w-8 h-8 text-primary" />
