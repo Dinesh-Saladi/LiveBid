@@ -91,7 +91,7 @@ async function initializeDatabase() {
 }
 
 
-let auctionIds = [];
+let auctionDetails = [];
 
 io.on("connection", (socket) => {
   console.log(socket.id);
@@ -99,7 +99,18 @@ io.on("connection", (socket) => {
     const newId = nanoid();
     console.log(`New Auction Created with id: ${newId}`);
     console.log(`Name: ${name} Category: ${category}`);
+    auctionDetails.push({id:newId, name: name, category: category});
     io.emit("auction-created", newId);
+  });
+
+  socket.on("join-auction", (auctionId) => {
+    const match = auctionDetails.find(auction => auction.id === auctionId);
+    if(match){
+      socket.join(auctionId);
+      io.emit("joined-auction", match);
+    }else{
+      io.emit("invalid-auctionId");
+    }
   })
 });
 

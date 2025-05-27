@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { Clock, TrendingUp, Heart } from "lucide-react";
+import JoinAuction from "./AllAuctions/JoinAuction";
 
 function AllAuctions() {
   const auctions = [
@@ -90,10 +91,17 @@ function AllAuctions() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="mb-8"
+        className="mb-8 flex flex-row justify-between"
       >
-        <h2 className="text-3xl font-bold text-foreground mb-2">All Auctions</h2>
-        <p className="text-muted-foreground">Discover amazing items up for auction</p>
+        <div>
+          <h2 className="text-3xl font-bold text-foreground mb-2">
+            All Auctions
+          </h2>
+          <p className="text-muted-foreground">
+            Discover amazing items up for auction
+          </p>
+        </div>
+        <JoinAuction />
       </motion.div>
 
       <motion.div
@@ -130,7 +138,9 @@ function AllAuctions() {
                   </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Current Bid</span>
+                      <span className="text-sm text-muted-foreground">
+                        Current Bid
+                      </span>
                       <span className="text-xl font-bold text-foreground">
                         ₹{auction.currentBid.toLocaleString()}
                       </span>

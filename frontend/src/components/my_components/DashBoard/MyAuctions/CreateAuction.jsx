@@ -23,15 +23,17 @@ import { useState } from "react";
 
 function CreateAuction() {
   const [name, setName] = useState("");
+  const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("");
   const { createAuctionHandle } = useSocketStore();
   function HandleSubmit() {
     console.log(name + " " + category);
     createAuctionHandle(name, category);
+    setOpen(false);
   }
   return (
     <motion.div className="m-4">
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="default">Create New Auction</Button>
         </DialogTrigger>
