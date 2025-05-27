@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_API;
+const BASE_URL = import.meta.env.VITE_BACKEND_API + "/api";
 
 export const useAuthStore = create((set, get) => ({
   user: null,
@@ -30,7 +30,7 @@ export const useAuthStore = create((set, get) => ({
       return { success: true, message: response.data.message };
     } catch (error) {
       //   alert(error.response.data.message);
-      throw new Error(response.data.message);
+      throw new Error(error.response.data.message);
     }
   },
 

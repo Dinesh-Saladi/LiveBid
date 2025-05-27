@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { Eye, Edit, Clock, Users } from "lucide-react";
+import CreateAuction from "./MyAuctions/CreateAuction";
 
 function MyAuctions() {
   const auctions = [
@@ -59,15 +60,22 @@ function MyAuctions() {
 
   return (
     <div className="p-8 bg-background min-h-screen">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-8"
-      >
-        <h2 className="text-3xl font-bold text-foreground mb-2">My Auctions</h2>
-        <p className="text-muted-foreground">Manage your active and completed auctions</p>
-      </motion.div>
+      <div className="flex flex-row justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <h2 className="text-3xl font-bold text-foreground mb-2">
+            My Auctions
+          </h2>
+          <p className="text-muted-foreground">
+            Manage your active and completed auctions
+          </p>
+        </motion.div>
+        <CreateAuction />
+      </div>
 
       <motion.div
         variants={containerVariants}

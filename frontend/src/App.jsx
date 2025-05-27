@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 axios.defaults.withCredentials = true;
 
-const BASE_URL = import.meta.env.VITE_BACKEND_API;
+const BASE_URL = import.meta.env.VITE_BACKEND_API + "/api";
 
 function App() {
   const { setUser, loading } = useAuthStore();
@@ -25,7 +25,7 @@ function App() {
   }, []);
   if (loading) return null;
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />

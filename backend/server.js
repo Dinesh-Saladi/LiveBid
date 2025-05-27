@@ -9,12 +9,24 @@ import passport from "passport";
 import flash from "express-flash";
 import authRoutes from "./routes/authRoutes.js";
 import initializePassport from "./config/passport.js";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { nanoid } from "nanoid";
 
 initializePassport(passport); // Passport configuration
 
 dotenv.config();
 const app = express();
+const server = createServer(app);
 const PORT = process.env.PORT;
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -78,8 +90,21 @@ async function initializeDatabase() {
   }
 }
 
+
+let auctionIds = [];
+
+io.on("connection", (socket) => {
+  console.log(socket.id);
+  socket.on("create-auction", (name, category) => {
+    const newId = nanoid();
+    console.log(`New Auction Created with id: ${newId}`);
+    console.log(`Name: ${name} Category: ${category}`);
+    io.emit("auction-created", newId);
+  })
+});
+
 initializeDatabase().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
   });
 });

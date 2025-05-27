@@ -53,7 +53,7 @@ function Features() {
           >
             <Card
               key={index}
-              className="sm:m-0 m-2 h-full flex flex-col transition-all duration-300 hover:shadow-lg"
+              className="sm:m-0 m-2 h-full flex flex-col transition-all cursor-pointer duration-300 hover:shadow-lg"
             >
               <CardContent className="p-6 space-y-4">
                 <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-3 w-fit">

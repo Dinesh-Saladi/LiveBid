@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      <Toaster />
+      <Toaster richColors/>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Welcome back!</CardTitle>

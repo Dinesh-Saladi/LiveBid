@@ -27,7 +27,7 @@ function DashBoard() {
 
   return (
     <div className="flex h-screen bg-background">
-      <Toaster />
+      <Toaster richColors/>
       <SideBar />
       <main className="flex-1 overflow-y-auto mt-16 md:mt-0">
         <Routes>
