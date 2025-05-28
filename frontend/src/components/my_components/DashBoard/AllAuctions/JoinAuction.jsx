@@ -18,12 +18,13 @@ import { useNavigate } from "react-router-dom";
 function JoinAuction() {
   const [auctionId, setAuctionId] = useState("");
   const [open, setOpen] = useState(false);
-  const { joinAuctionHandle } = useSocketStore();
+  const { isThereAuctionHandle } = useSocketStore();
   const navigate = useNavigate();
   function HandleSubmit() {
-    joinAuctionHandle(auctionId, () => {
+    isThereAuctionHandle(auctionId, () => {
+      console.log("success");
       setOpen(false);
-      navigate(`/auction/${auctionId}`);
+      navigate(`/dashboard/auction/${auctionId}`);
     });
   }
   return (
@@ -40,7 +41,9 @@ function JoinAuction() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              console.log("submitted");
               HandleSubmit();
+              console.log("completed");
             }}
           >
             <div className="grid gap-4 py-4">

@@ -7,8 +7,8 @@ import axios from "axios";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
-import AuctionPage from "./pages/AuctionPage";
 import NotFound from "./pages/NotFound";
+
 axios.defaults.withCredentials = true;
 
 const BASE_URL = import.meta.env.VITE_BACKEND_API + "/api";
@@ -34,7 +34,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard/*" element={<DashBoard />} />
-          <Route path="/auction/:auctionId" element={<AuctionPage/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

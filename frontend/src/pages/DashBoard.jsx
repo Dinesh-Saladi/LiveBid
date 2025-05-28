@@ -10,11 +10,12 @@ import MyAuctions from "../components/my_components/DashBoard/MyAuctions";
 import AllAuctions from "../components/my_components/DashBoard/AllAuctions";
 import Activity from "../components/my_components/DashBoard/Activity";
 import Account from "../components/my_components/DashBoard/Account";
+import AuctionPage from "../components/my_components/DashBoard/AuctionPage";
 
 // Placeholder components for different sections
 
 function DashBoard() {
-  const { user, loading } = useAuthStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +37,7 @@ function DashBoard() {
           <Route path="/auctions" element={<AllAuctions />} />
           <Route path="/activity" element={<Activity />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/auction/:auctionId" element={<AuctionPage/>} />
         </Routes>
       </main>
     </div>

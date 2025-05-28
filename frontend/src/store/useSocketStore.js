@@ -13,17 +13,30 @@ export const useSocketStore = create((set, get) => ({
       console.log("From Frontend Auction Created with id : " + newId);
     });
   },
-  joinAuctionHandle: (auctionId, onSuccess) => {
+  isThereAuctionHandle: (auctionId, onSuccess) => {
+    socket.emit("is-there-auction", auctionId);
+
+    socket.once("yes-it-is-there", () => {
+      console.log("yes is there from frontend....");
+      onSuccess();
+    });
+
+    socket.once("no-its-not", () => {
+      console.log("Invalid Auction Id");
+    });
+  },
+  joinAuctionHandle: (auctionId, onFail) => {
     socket.emit("join-auction", auctionId);
 
     socket.once("joined-auction", (auctionDetails) => {
       console.log("Joined the " + auctionDetails.name + " Auction");
       set({joinedAuction: auctionDetails});
-      onSuccess();
-    })
+      console.log(get().joinedAuction);
+    });
 
     socket.once("invalid-auctionId", () => {
       console.log("Invalid Auction Id");
-    })
-  }
+      onFail();
+    });
+  },
 }));

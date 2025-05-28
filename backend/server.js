@@ -90,7 +90,6 @@ async function initializeDatabase() {
   }
 }
 
-
 let auctionDetails = [];
 
 io.on("connection", (socket) => {
@@ -99,19 +98,30 @@ io.on("connection", (socket) => {
     const newId = nanoid();
     console.log(`New Auction Created with id: ${newId}`);
     console.log(`Name: ${name} Category: ${category}`);
-    auctionDetails.push({id:newId, name: name, category: category});
+    auctionDetails.push({ id: newId, name: name, category: category });
     io.emit("auction-created", newId);
   });
 
-  socket.on("join-auction", (auctionId) => {
-    const match = auctionDetails.find(auction => auction.id === auctionId);
-    if(match){
-      socket.join(auctionId);
-      io.emit("joined-auction", match);
-    }else{
-      io.emit("invalid-auctionId");
+  socket.on("is-there-auction", (auctionId) => {
+    const match = auctionDetails.find((auction) => auction.id === auctionId);
+    if (match) {
+      console.log("yes its there from backend");
+      socket.emit("yes-it-is-there");
+    } else {
+      console.log("no not there");
+      socket.emit("no-its-not");
     }
-  })
+  });
+
+  socket.on("join-auction", (auctionId) => {
+    const match = auctionDetails.find((auction) => auction.id === auctionId);
+    if (match) {
+      socket.join(auctionId);
+      socket.emit("joined-auction", match);
+    } else {
+      socket.emit("invalid-auctionId");
+    }
+  });
 });
 
 initializeDatabase().then(() => {
