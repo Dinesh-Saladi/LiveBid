@@ -17,7 +17,7 @@ function Timer(props) {
   }, [timeLeft, isActive]);
 
   const progress = timeLeft / 60;
-  const radius = 60;
+  const radius = props.radius;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - progress * circumference;
 
