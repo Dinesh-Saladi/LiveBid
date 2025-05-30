@@ -39,4 +39,17 @@ export const useSocketStore = create((set, get) => ({
       onFail();
     });
   },
+  startAuction: (auctionId) => {
+    socket.emit("start-auction", auctionId);
+  },
+  getCurrentItem: (auctionId, setCurrent) => {
+    socket.once("current", (value) => {
+      setCurrent(value);
+    });
+  },
+  getStatus: (setStatus) => {
+    socket.once("current-status", (status) => {
+      setStatus(status);
+    });
+  }
 }));

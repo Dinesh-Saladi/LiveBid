@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 function Timer(props) {
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [isActive, setIsActive] = useState(true);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          return 60;
-        }
-        console.log(prev - 1);
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeLeft, isActive]);
-
-  const progress = timeLeft / 60;
+  const timeLeft = props.time;
+  const progress = timeLeft / 120;
   const radius = props.radius;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - progress * circumference;

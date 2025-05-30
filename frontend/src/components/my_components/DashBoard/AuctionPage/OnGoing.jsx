@@ -1,17 +1,20 @@
-import React from "react";
 import Timer from "./Timer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useSocketStore } from "../../../../store/useSocketStore";
+import { useState } from "react";
 
-const item = {
-  name: "Keyboard",
-  image:
-    "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  Description:
-    "Responsive keys for fast, accurate typing\nSleek, durable design\nCustomizable RGB backlighting\nPlug & play with USB or Bluetooth connectivity",
-  seller: "Dinesh",
-  email: "dineshsaladi79@gmail.com",
-};
+// const item = {
+//   name: "Keyboard",
+//   image:
+//     "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   Description:
+//     "Responsive keys for fast, accurate typing\nSleek, durable design\nCustomizable RGB backlighting\nPlug & play with USB or Bluetooth connectivity",
+//   seller: "Dinesh",
+//   email: "dineshsaladi79@gmail.com",
+// };
 
 const currentbid = {
   bid: "1000$",
@@ -20,6 +23,19 @@ const currentbid = {
 };
 
 function OnGoing() {
+  const { auctionId } = useParams();
+  const [current, setCurrent] = useState({});
+  const item = current["curr_item"];
+  const time = current["curr_time"];
+  const { getCurrentItem } = useSocketStore();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getCurrentItem(auctionId, setCurrent);
+      console.log(current);
+    }, 500);
+    return () => clearInterval(interval);
+  });
+  if(!item) return null;
   return (
     <div>
       {/* laptops and tabs */}
@@ -77,7 +93,7 @@ function OnGoing() {
           <div className="flex items-center">
             <Button className="flex-1">Place Bid</Button>
             <div className="flex justify-center items-center">
-              <Timer radius="60" />
+              <Timer radius="60" time={time}/>
             </div>
           </div>
           <Card className="w-full hover:shadow-lg transition-all duration-300 border border-border">
@@ -136,7 +152,7 @@ function OnGoing() {
           <div className="flex items-center">
             <Button className="flex-1">Place Bid</Button>
             <div className="flex justify-center items-center">
-              <Timer radius="45" />
+              <Timer radius="45" time={time}/>
             </div>
           </div>
           {/* Current Bid Card */}

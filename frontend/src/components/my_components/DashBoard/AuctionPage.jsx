@@ -7,12 +7,14 @@ import { motion } from "framer-motion";
 import OnGoing from "./AuctionPage/OnGoing";
 import UpComing from "./AuctionPage/UpComing";
 import Ended from "./AuctionPage/Ended";
+import { useState } from "react";
 
 function AuctionPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const { auctionId } = useParams();
-  const { joinAuctionHandle, joinedAuction } = useSocketStore();
+  const { joinAuctionHandle, joinedAuction, startAuction, getStatus } = useSocketStore();
+  const [status, setStatus] = useState("upComing");
 
   useEffect(() => {
     if (!user) {
@@ -22,6 +24,14 @@ function AuctionPage() {
       navigate("/");
     });
   }, [user, navigate, auctionId]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getStatus(setStatus);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  });
 
   if (!user || !joinedAuction) return null;
 
@@ -39,11 +49,17 @@ function AuctionPage() {
           .
         </p>
       </motion.div>
-        
-      {/* <OnGoing />  */}
-      {/* <UpComing /> */}
-      <Ended />
-      
+
+      {status === "onGoing" && <OnGoing />}
+      {status === "upComing" && (
+        <UpComing
+          onStart={() => {
+            setStatus("onGoing");
+            startAuction(auctionId);
+          }}
+        />
+      )}
+      {status === "ended" && <Ended />}
     </div>
   );
 }

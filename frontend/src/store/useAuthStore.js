@@ -25,8 +25,9 @@ export const useAuthStore = create((set, get) => ({
         password,
       });
       console.log("received data: " + response.data);
+      console.log(response.data.user);
       set({ user: response.data.user });
-      console.log(user);
+      console.log(get().user);
       return { success: true, message: response.data.message };
     } catch (error) {
       //   alert(error.response.data.message);
