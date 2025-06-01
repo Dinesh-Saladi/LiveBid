@@ -148,7 +148,7 @@ setInterval(() => {
 
 io.on("connection", (socket) => {
   console.log(socket.id);
-  socket.on("create-auction", (name, category, user_id) => {
+  socket.on("create-auction", async (name, category, user_id) => {
     const newId = nanoid();
     console.log(`New Auction Created with id: ${newId}`);
     console.log(`Name: ${name} Category: ${category}`);
@@ -158,12 +158,20 @@ io.on("connection", (socket) => {
       category: category,
       user_id: user_id,
     });
+    const status = "upComing";
+    const result = await sql`
+      INSERT INTO auctions (user_id, auction_name, auction_category, status)
+      VALUES (${user_id}, ${name}, ${category}, ${status})
+      RETURNING *
+    `;
+    console.log(result);
     io.emit("auction-created", newId);
   });
 
-  socket.on("is-there-auction", (auctionId) => {
-    const match = auctionDetails.find((auction) => auction.id === auctionId);
-    if (match) {
+  socket.on("is-there-auction", async (auctionId) => {
+    // const match = auctionDetails.find((auction) => auction.id === auctionId);
+    const match = await sql`SELECT id FROM auctions WHERE id = ${auctionId}`;
+    if (match.length) {
       console.log("yes its there from backend");
       socket.emit("yes-it-is-there");
     } else {
@@ -172,12 +180,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("join-auction", (auctionId) => {
-    const match = auctionDetails.find((auction) => auction.id === auctionId);
-    if (match) {
+  socket.on("join-auction", async (auctionId) => {
+    // const match = auctionDetails.find((auction) => auction.id === auctionId);
+    const match = await sql`SELECT * FROM auctions WHERE id = ${auctionId}`;
+    if (match.length) {
       socket.join(auctionId);
       console.log(socket.id);
-      socket.emit("joined-auction", match);
+      socket.emit("joined-auction", match[0]);
     } else {
       socket.emit("invalid-auctionId");
     }

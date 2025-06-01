@@ -20,15 +20,20 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useSocketStore } from "../../../../store/useSocketStore";
 import { useState } from "react";
+import { useAuthStore } from "../../../../store/useAuthStore";
 
 function CreateAuction() {
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("");
   const { createAuctionHandle } = useSocketStore();
+  const { user } = useAuthStore();
+  console.log("user");
+  console.log(user);
+  console.log(user.id);
   function HandleSubmit() {
     console.log(name + " " + category);
-    createAuctionHandle(name, category);
+    createAuctionHandle(name, category, user.id);
     setOpen(false);
   }
   return (
