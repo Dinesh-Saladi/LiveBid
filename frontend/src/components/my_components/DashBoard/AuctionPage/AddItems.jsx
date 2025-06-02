@@ -140,7 +140,7 @@ function AddItems() {
               </div>
             </div>
             {/* mobiles */}
-            <div className="flex flex-col md:hidden gap-4 py-4">
+            <div className="max-h-[70vh] overflow-y-auto flex flex-col md:hidden gap-4 py-4">
               <div>
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center gap-4 p-4">
