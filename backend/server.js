@@ -206,6 +206,22 @@ io.on("connection", (socket) => {
     io.to(auctionId).emit("current", value);
     onGoingAuctions.set(auctionId, value);
   });
+
+  socket.on("add-item", async (name, description, userId, auctionId, basePrice, imageUrl) => {
+    console.log("adding item.....")
+    try{
+      const res = await sql`
+        INSERT INTO items (item_name, item_description, user_id, auction_id, base_price, image_url)
+        VALUES (${name}, ${description}, ${userId}, ${auctionId}, ${basePrice}, ${imageUrl})
+      `;
+      console.log("added...");
+      socket.emit("added");
+    }catch(e){
+      console.log("not added");
+      console.log(e);
+      socket.emit("not-added", e);
+    }
+  });
 });
 
 initializeDatabase().then(() => {

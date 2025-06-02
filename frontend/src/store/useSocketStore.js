@@ -51,5 +51,16 @@ export const useSocketStore = create((set, get) => ({
     socket.once("current-status", (status) => {
       setStatus(status);
     });
+  },
+  addItemHandle: (name, description, userId, auctionId, basePrice, imageUrl) => {
+    socket.emit("add-item", name, description, userId, auctionId, basePrice, imageUrl);
+
+    socket.once("added", () => {
+      console.log("item added succesfully");
+    });
+
+    socket.once("not-added", (e) => {
+      console.log("error");
+    });
   }
 }));

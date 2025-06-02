@@ -26,11 +26,15 @@ function AddItems() {
   const [imageUrl, setImageUrl] = useState("");
   const [basePrice, setBasePrice] = useState("");
   const { user } = useAuthStore();
+  const { joinedAuction, addItemHandle } = useSocketStore();
   console.log("user");
   console.log(user);
   console.log(user.id);
+  console.log("joined auction");
+  console.log(joinedAuction.id);
   function HandleSubmit() {
     console.log(name + " " + basePrice);
+    addItemHandle(name, description, user.id, joinedAuction.id, basePrice, imageUrl);
     setOpen(false);
   }
   async function HandleFileChange(e) {
@@ -89,7 +93,7 @@ function AddItems() {
                       <img
                         src={imageUrl}
                         alt="imageUrl"
-                        className="w-full h-48 object-cover rounded-md"
+                        className="w-64 h-full object-cover rounded-md"
                       />
                     ) : (
                       <CloudUpload className="h-48 w-auto p-4" />
