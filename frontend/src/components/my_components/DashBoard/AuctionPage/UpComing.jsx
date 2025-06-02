@@ -2,6 +2,7 @@ import { Hourglass, Archive, BellElectric } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "../../../../store/useAuthStore";
 import { useSocketStore } from "../../../../store/useSocketStore";
+import AddItems from "./AddItems";
 
 function UpComing(props) {
   const { user } = useAuthStore();
@@ -29,7 +30,7 @@ function UpComing(props) {
         )}
 
         <div className="col-start-2 col-span-1 flex flex-col items-center justify-center gap-4">
-          <Button className="w-full">Add Items</Button>
+          <AddItems />
           <h2 className="text-3xl font-bold">Auction Items</h2>
           <Archive className="h-auto w-1/3 text-muted-foreground" />
           <p className="text-lg font-sm text-muted-foreground">

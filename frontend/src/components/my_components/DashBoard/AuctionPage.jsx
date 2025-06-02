@@ -38,12 +38,12 @@ function AuctionPage() {
   return (
     <div className="p-8 bg-background min-h-screen">
       <motion.div>
-        <h2 className="text-4xl font-bold text-foreground mb-2">
+        <h2 className ="text-4xl font-bold text-foreground mb-2">
           Welcome to the {joinedAuction.auction_name} Auction!
         </h2>
         <p className="text-muted-foreground text-lg">
           Place your bids and own the finest{" "}
-          {joinedAuction.category === "other"
+          {joinedAuction.auction_category === "other"
             ? "items"
             : joinedAuction.auction_category}
           .
