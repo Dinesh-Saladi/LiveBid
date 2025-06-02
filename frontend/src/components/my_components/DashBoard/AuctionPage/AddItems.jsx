@@ -24,13 +24,13 @@ function AddItems() {
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [basePrice, setBasePrice] = useState("");
   const { user } = useAuthStore();
   console.log("user");
   console.log(user);
   console.log(user.id);
   function HandleSubmit() {
-    console.log(name + " " + category);
-    createAuctionHandle(name, category, user.id);
+    console.log(name + " " + basePrice);
     setOpen(false);
   }
   async function HandleFileChange(e) {
@@ -67,7 +67,7 @@ function AddItems() {
             Add Items
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-auto max-w-fit min-w-[300px] md:min-w-[700px]">
+        <DialogContent className="w-auto max-w-fit min-w-[300px] md:min-w-[600px]">
           <DialogHeader>
             <DialogTitle>Add Item</DialogTitle>
             <DialogDescription>
@@ -81,12 +81,16 @@ function AddItems() {
             }}
           >
             {/* laptops */}
-            <div className="hidden md:flex flex-row justify-center gap-4 py-4">
+            <div className="hidden md:flex flex-row justify-around gap-4">
               <div>
                 <Card>
-                  <CardContent className="flex flex-col items-center justify-center gap-4 p-4">
+                  <CardContent className="flex flex-col items-center justify-center gap-4">
                     {imageUrl.length > 0 ? (
-                      <img src={imageUrl} alt="imageUrl" className="w-full h-48 object-cover rounded-md"/>
+                      <img
+                        src={imageUrl}
+                        alt="imageUrl"
+                        className="w-full h-48 object-cover rounded-md"
+                      />
                     ) : (
                       <CloudUpload className="h-48 w-auto p-4" />
                     )}
@@ -102,31 +106,37 @@ function AddItems() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    placeholder="Enter Name"
-                    className="col-span-3"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="description" className="text-right">
-                    Desription
-                  </Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Enter Description"
-                    className="col-span-3"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
+              <div className="flex flex-col gap-4 justify-center w-3/4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="Enter Name"
+                  className="col-span-3"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <Label htmlFor="basePrice" className="text-right">
+                  Base Price
+                </Label>
+                <Input
+                  id="basePrice"
+                  placeholder="Enter Base Price"
+                  className="col-span-3"
+                  value={basePrice}
+                  onChange={(e) => setBasePrice(e.target.value)}
+                />
+                <Label htmlFor="description" className="text-right">
+                  Desription
+                </Label>
+                <Textarea
+                  id="description"
+                  placeholder="Enter Description"
+                  className="col-span-3"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
               </div>
             </div>
             {/* mobiles */}
@@ -135,7 +145,11 @@ function AddItems() {
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center gap-4 p-4">
                     {imageUrl.length > 0 ? (
-                      <img src={imageUrl} alt="imageUrl" className="w-full h-36 object-cover rounded-md"/>
+                      <img
+                        src={imageUrl}
+                        alt="imageUrl"
+                        className="w-full h-36 object-cover rounded-md"
+                      />
                     ) : (
                       <CloudUpload className="h-36 w-auto p-4" />
                     )}
@@ -160,6 +174,16 @@ function AddItems() {
                 className="col-span-3"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+              />
+              <Label htmlFor="basePrice" className="text-right">
+                Base Price
+              </Label>
+              <Input
+                id="basePrice"
+                placeholder="Enter Base Price"
+                className="col-span-3"
+                value={basePrice}
+                onChange={(e) => setBasePrice(e.target.value)}
               />
               <Label htmlFor="description" className="text-right">
                 Desription
