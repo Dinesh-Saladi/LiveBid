@@ -26,7 +26,15 @@ export const useAuthStore = create((set, get) => ({
       });
       console.log("received data: " + response.data);
       console.log(response.data.user);
-      set({ user: response.data.user });
+      let user = response.data.user;
+
+      // Ensure `user` is always a single object
+      if (Array.isArray(user) && user.length === 1) {
+        user = user[0];
+      }
+
+      set({ user });
+      console.log("user below");
       console.log(get().user);
       return { success: true, message: response.data.message };
     } catch (error) {

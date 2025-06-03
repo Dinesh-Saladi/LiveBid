@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const socket = io(import.meta.env.VITE_BACKEND_API);
+export const socket = io(import.meta.env.VITE_BACKEND_API);
 
 export const useSocketStore = create((set, get) => ({
   joinedAuction: null,
@@ -61,6 +61,18 @@ export const useSocketStore = create((set, get) => ({
 
     socket.once("not-added", (e) => {
       console.log("error");
+    });
+  },
+  getItems: (setItems, auctionId) => {
+    socket.emit("get-items", auctionId);
+
+    socket.once("here-take-items", (items) => {
+      console.log(items);
+      setItems(items);
+    });
+
+    socket.once("error-getting-items", (e) => {
+      console.log(e);
     });
   }
 }));

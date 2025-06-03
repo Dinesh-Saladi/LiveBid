@@ -207,20 +207,45 @@ io.on("connection", (socket) => {
     onGoingAuctions.set(auctionId, value);
   });
 
-  socket.on("add-item", async (name, description, userId, auctionId, basePrice, imageUrl) => {
-    console.log("adding item.....")
-    try{
-      const res = await sql`
+  socket.on(
+    "add-item",
+    async (name, description, userId, auctionId, basePrice, imageUrl) => {
+      console.log("adding item.....");
+      try {
+        const res = await sql`
         INSERT INTO items (item_name, item_description, user_id, auction_id, base_price, image_url)
         VALUES (${name}, ${description}, ${userId}, ${auctionId}, ${basePrice}, ${imageUrl})
       `;
-      console.log("added...");
-      socket.emit("added");
-    }catch(e){
-      console.log("not added");
-      console.log(e);
-      socket.emit("not-added", e);
+        console.log("added...");
+        socket.emit("added");
+        const items =
+          await sql`SELECT * FROM items WHERE auction_id = ${auctionId}`;
+        io.emit("new-items", items);
+        console.log("sent");
+        console.log("Emitted new-items to room", auctionId, "with", items);
+      } catch (e) {
+        console.log("not added");
+        console.log(e);
+        socket.emit("not-added", e);
+      }
     }
+  );
+
+  socket.on("get-items", async (auctionId) => {
+    try {
+      console.log("getting items...");
+      const res =
+        await sql`SELECT * FROM items WHERE auction_id = ${auctionId}`;
+      console.log(res);
+      socket.emit("here-take-items", res);
+      console.log("items sent");
+    } catch (e) {
+      socket.emit("error-getting-items", e);
+    }
+  });
+
+  socket.on("get-rooms", () => {
+    console.log("Rooms for", socket.id, ":", Array.from(socket.rooms));
   });
 });
 

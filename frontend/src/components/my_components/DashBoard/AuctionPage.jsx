@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useSocketStore } from "../../../store/useSocketStore";
+import { useSocketStore, socket } from "../../../store/useSocketStore";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -23,6 +23,7 @@ function AuctionPage() {
     joinAuctionHandle(auctionId, () => {
       navigate("/");
     });
+    socket.emit("get-rooms");
   }, [user, navigate, auctionId]);
 
   useEffect(() => {
