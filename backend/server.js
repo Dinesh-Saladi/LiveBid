@@ -124,7 +124,7 @@ let items = [
 
 const onGoingAuctions = new Map();
 
-setInterval(() => {
+setInterval(async () => {
   for (const [key, value] of onGoingAuctions) {
     value["curr_time"] -= 1;
     console.log(value["curr_time"]);
@@ -196,15 +196,30 @@ io.on("connection", (socket) => {
     socket.emit(onGoingAuctions.get(auctionId)["curr_item"]);
   });
 
-  socket.on("start-auction", (auctionId) => {
-    const value = {};
-    value["curr_item"] = items[0];
-    value["curr_time"] = 120;
-    console.log(value);
-    items.shift();
-    io.to(auctionId).emit("current-status", "onGoing");
-    io.to(auctionId).emit("current", value);
-    onGoingAuctions.set(auctionId, value);
+  socket.on("start-auction", async (auctionId) => {
+    try {
+      const value = {};
+      const res = await sql`
+      SELECT * 
+      FROM items i
+      JOIN users u ON i.user_id = u.id
+      LIMIT 1
+      `;
+      if (res.length) {
+        console.log(res[0]);
+        value["curr_item"] = res[0];
+        value["curr_time"] = 120;
+        console.log(value);
+        // items.shift();
+        io.to(auctionId).emit("current-status", "onGoing");
+        io.to(auctionId).emit("current-item", value);
+        onGoingAuctions.set(auctionId, value);
+      }else{
+        socket.emit("cannot-start");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   socket.on(

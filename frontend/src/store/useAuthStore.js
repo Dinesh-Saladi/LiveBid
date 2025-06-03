@@ -27,6 +27,7 @@ export const useAuthStore = create((set, get) => ({
       console.log("received data: " + response.data);
       console.log(response.data.user);
       let user = response.data.user;
+      console.log(user);
 
       // Ensure `user` is always a single object
       if (Array.isArray(user) && user.length === 1) {

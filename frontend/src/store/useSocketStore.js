@@ -41,15 +41,14 @@ export const useSocketStore = create((set, get) => ({
   },
   startAuction: (auctionId) => {
     socket.emit("start-auction", auctionId);
+
+    socket.once("cannot-start", () => {
+      console.log("There should be atleast 1 item to start");
+    })
   },
   getCurrentItem: (auctionId, setCurrent) => {
     socket.once("current", (value) => {
       setCurrent(value);
-    });
-  },
-  getStatus: (setStatus) => {
-    socket.once("current-status", (status) => {
-      setStatus(status);
     });
   },
   addItemHandle: (name, description, userId, auctionId, basePrice, imageUrl) => {

@@ -33,6 +33,6 @@ export default async function initializePassport(passport) {
     const user = await sql`
             SELECT * FROM users WHERE id = ${id}
         `;
-    done(null, user);
+    done(null, user[0]);
   });
 }

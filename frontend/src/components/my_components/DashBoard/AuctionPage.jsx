@@ -13,7 +13,7 @@ function AuctionPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const { auctionId } = useParams();
-  const { joinAuctionHandle, joinedAuction, startAuction, getStatus } = useSocketStore();
+  const { joinAuctionHandle, joinedAuction, startAuction } = useSocketStore();
   const [status, setStatus] = useState("upComing");
 
   useEffect(() => {
@@ -27,19 +27,24 @@ function AuctionPage() {
   }, [user, navigate, auctionId]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      getStatus(setStatus);
-    }, 1000);
+    const HandleChangeStatus = (status) => {
+      console.log("status changed");
+      setStatus(status);
+    };
 
-    return () => clearInterval(interval);
-  });
+    socket.on("current-status", HandleChangeStatus);
+
+    return () => {
+      socket.off("current-status", HandleChangeStatus);
+    };
+  }, []);
 
   if (!user || !joinedAuction) return null;
 
   return (
     <div className="p-8 bg-background min-h-screen">
       <motion.div>
-        <h2 className ="text-4xl font-bold text-foreground mb-2">
+        <h2 className="text-4xl font-bold text-foreground mb-2">
           Welcome to the {joinedAuction.auction_name} Auction!
         </h2>
         <p className="text-muted-foreground text-lg">

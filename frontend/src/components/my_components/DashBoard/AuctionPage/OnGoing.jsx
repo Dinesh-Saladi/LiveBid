@@ -47,17 +47,17 @@ function OnGoing() {
               <div className="flex flex-col items-start space-y-4">
                 <img
                   className="w-full h-48 object-cover rounded-md"
-                  src={item.image}
-                  alt={item.name}
+                  src={item.image_url}
+                  alt={item.item_name}
                 />
                 <div>
                   <p className="text-xl font-semibold text-foreground mb-1">
-                    Name: {item.name}
+                    Name: {item.item_name}
                   </p>
                   <p className="text-lg text-muted-foreground mb-2">
                     Description:
                     <ul className="list-disc list-inside ml-4 mt-1 space-y-1">
-                      {item.Description.split("\n").map((line, index) => (
+                      {item.item_description.split("\n").map((line, index) => (
                         <li key={index}>{line}</li>
                       ))}
                     </ul>
@@ -104,7 +104,7 @@ function OnGoing() {
                     Seller Details
                   </h2>
                   <p className="text-lg text-muted-foreground mb-2">
-                    Name: {item.seller}
+                    Name: {item.name}
                   </p>
                   <p className="text-lg text-muted-foreground mb-2">
                     Email: {item.email}
@@ -125,17 +125,17 @@ function OnGoing() {
               <div className="flex flex-col items-start space-y-4">
                 <img
                   className="w-full h-48 object-cover rounded-md"
-                  src={item.image}
-                  alt={item.name}
+                  src={item.image_url}
+                  alt={item.item_name}
                 />
                 <div>
                   <p className="text-xl font-semibold text-foreground mb-1">
-                    Name: {item.name}
+                    Name: {item.item_name}
                   </p>
                   <p className="text-lg text-muted-foreground mb-2">
                     Description:
                     <ul className="list-disc list-inside ml-4 mt-1 space-y-1">
-                      {item.Description.split("\n").map((line, index) => (
+                      {item.item_description.split("\n").map((line, index) => (
                         <li key={index}>{line}</li>
                       ))}
                     </ul>
@@ -182,7 +182,7 @@ function OnGoing() {
                     Seller Details
                   </h2>
                   <p className="text-lg text-muted-foreground mb-2">
-                    Name: {item.seller}
+                    Name: {item.name}
                   </p>
                   <p className="text-lg text-muted-foreground mb-2">
                     Email: {item.email}
