@@ -29,6 +29,7 @@ function AuctionPage() {
   useEffect(() => {
     const HandleChangeStatus = (status) => {
       console.log("status changed");
+      console.log(status);
       setStatus(status);
     };
 

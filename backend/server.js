@@ -122,6 +122,30 @@ let items = [
   },
 ];
 
+function incBid(curr_bid) {
+  if (curr_bid < 100) {
+    return curr_bid + 20;
+  } else if (curr_bid < 500) {
+    return curr_bid + 50;
+  } else if (curr_bid < 1000) {
+    return curr_bid + 100;
+  } else if (curr_bid < 2000) {
+    return curr_bid + 200;
+  } else if (curr_bid < 10000) {
+    return curr_bid + 500;
+  } else if (curr_bid < 100000) {
+    return curr_bid + 1000;
+  } else if (curr_bid < 500000) {
+    return curr_bid + 5000;
+  } else if (curr_bid < 1000000) {
+    return curr_bid + 10000;
+  } else if (curr_bid < 5000000) {
+    return curr_bid + 50000;
+  } else {
+    return curr_bid + 100000;
+  }
+}
+
 const onGoingAuctions = new Map();
 
 setInterval(async () => {
@@ -129,19 +153,71 @@ setInterval(async () => {
     value["curr_time"] -= 1;
     console.log(value["curr_time"]);
     if (value["curr_time"] == 0) {
+      io.to(key).emit("current", value);
       io.to(key).emit("time-up", value);
-      if (items.length > 0) {
-        value["curr_item"] = items[0];
-        value["curr_time"] = 120;
-        items.shift();
+      try {
+        //activity seller
+        const activity_item = value["curr_item"];
+        const activity_bid = value["bid"];
+        if (activity_bid.price) {
+          let status = "Sold";
+          const res1 = await sql`
+          INSERT INTO activity (item_name, item_description, user_id, status, price)
+          VALUES (${activity_item.item_name}, ${activity_item.item_description}, ${activity_item.user_id}, ${status}, ${activity_bid.price});
+          `;
+          status = "Bought";
+          const res2 = await sql`
+          INSERT INTO activity (item_name, item_description, user_id, status, price)
+          VALUES (${activity_item.item_name}, ${activity_item.item_description}, ${activity_bid.id}, ${status}, ${activity_bid.price});
+          `;
+          const res3 = await sql`
+          INSERT INTO summary (auction_id, item_name, seller, buyer, price, status)
+          VALUES (${key}, ${activity_item.item_name},${activity_item.name},${activity_bid.name}, ${activity_bid.price}, ${status});
+          `;
+        } else {
+          const status = "UnSold";
+          const res1 = await sql`
+          INSERT INTO activity (item_name, item_description, user_id, status, price)
+          VALUES (${activity_item.item_name}, ${activity_item.item_description}, ${activity_item.user_id}, ${status}, ${activity_bid.price});
+          `;
+          const res3 = await sql`
+          INSERT INTO summary (auction_id, item_name, seller, buyer, price, status)
+          VALUES (${key}, ${activity_item.item_name},${activity_item.name},${activity_bid.name}, ${activity_bid.price}, ${status});
+          `;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      if (value["queue"].length > 0) {
+        value["curr_item"] = value["queue"][0];
+        value["bid"] = {
+          name: null,
+          email: null,
+          price: null,
+        };
+        value["queue"].shift();
+        value["curr_time"] = 15;
         io.to(key).emit("current", value);
         onGoingAuctions.set(key, value);
       } else {
+        const status = "ended";
+        try {
+          const res = await sql`
+          UPDATE auctions
+          SET status = ${status}
+          WHERE id = ${key}
+          `;
+        } catch (e) {
+          console.log(e);
+        }
+        io.to(key).emit("current-status", "ended");
         onGoingAuctions.delete(key);
       }
     } else {
-      io.to(key).emit("current", value);
-      onGoingAuctions.set(key, value);
+      if(value["curr_time"] >= 0){
+        io.to(key).emit("current", value);
+        onGoingAuctions.set(key, value);
+      }
     }
   }
 }, 1000);
@@ -187,6 +263,7 @@ io.on("connection", (socket) => {
       socket.join(auctionId);
       console.log(socket.id);
       socket.emit("joined-auction", match[0]);
+      io.to(auctionId).emit("current-status", match[0].status);
     } else {
       socket.emit("invalid-auctionId");
     }
@@ -203,18 +280,35 @@ io.on("connection", (socket) => {
       SELECT * 
       FROM items i
       JOIN users u ON i.user_id = u.id
-      LIMIT 1
       `;
       if (res.length) {
-        console.log(res[0]);
+        console.log(res);
+        value["queue"] = res;
         value["curr_item"] = res[0];
-        value["curr_time"] = 120;
+        value["bid"] = {
+          id: null,
+          name: null,
+          email: null,
+          price: null,
+        };
+        value["curr_time"] = 15;
+        value["queue"].shift();
         console.log(value);
         // items.shift();
+        const status = "onGoing";
+        try {
+          const res = await sql`
+          UPDATE auctions
+          SET status = ${status}
+          WHERE id = ${auctionId}
+          `;
+        } catch (e) {
+          console.log(e);
+        }
         io.to(auctionId).emit("current-status", "onGoing");
-        io.to(auctionId).emit("current-item", value);
+        io.to(auctionId).emit("current", value);
         onGoingAuctions.set(auctionId, value);
-      }else{
+      } else {
         socket.emit("cannot-start");
       }
     } catch (e) {
@@ -261,6 +355,22 @@ io.on("connection", (socket) => {
 
   socket.on("get-rooms", () => {
     console.log("Rooms for", socket.id, ":", Array.from(socket.rooms));
+  });
+
+  socket.on("place-bid", (auctionId, user) => {
+    let value = onGoingAuctions.get(auctionId);
+    if (value["bid"].id) {
+      value["bid"].price = incBid(value["bid"].price);
+    } else {
+      value["bid"].price = value["curr_item"].base_price;
+    }
+    value["bid"].id = user.id;
+    value["bid"].name = user.name;
+    value["bid"].email = user.email;
+    value["curr_time"] = 15;
+    onGoingAuctions.set(auctionId, value);
+    io.to(auctionId).emit("current", value);
+    console.log(value);
   });
 });
 

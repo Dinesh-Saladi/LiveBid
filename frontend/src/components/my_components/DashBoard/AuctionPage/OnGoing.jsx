@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSocketStore } from "../../../../store/useSocketStore";
+import { useSocketStore, socket } from "../../../../store/useSocketStore";
 import { useState } from "react";
+import { useAuthStore } from "../../../../store/useAuthStore";
 
 // const item = {
 //   name: "Keyboard",
@@ -16,26 +17,31 @@ import { useState } from "react";
 //   email: "dineshsaladi79@gmail.com",
 // };
 
-const currentbid = {
-  bid: "1000$",
-  name: "Dinesh",
-  email: "dineshsaladi79@gmail.com",
-};
+// const currentbid = {
+//   bid: "1000$",
+//   name: "Dinesh",
+//   email: "dineshsaladi79@gmail.com",
+// };
 
 function OnGoing() {
   const { auctionId } = useParams();
   const [current, setCurrent] = useState({});
   const item = current["curr_item"];
   const time = current["curr_time"];
-  const { getCurrentItem } = useSocketStore();
+  const currentbid = current["bid"];
+  console.log(currentbid);
+  const { user } = useAuthStore();
+  // const { getCurrentItem } = useSocketStore();
   useEffect(() => {
-    const interval = setInterval(() => {
-      getCurrentItem(auctionId, setCurrent);
-      console.log(current);
-    }, 500);
-    return () => clearInterval(interval);
-  });
-  if(!item) return null;
+    const HandleCurrent = (current) => {
+      setCurrent(current);
+    };
+    socket.on("current", HandleCurrent);
+    return () => {
+      socket.off("current", HandleCurrent);
+    };
+  }, []);
+  if (!item) return null;
   return (
     <div>
       {/* laptops and tabs */}
@@ -76,7 +82,7 @@ function OnGoing() {
               <div className="flex flex-col items-start space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold text-foreground mb-1">
-                    Current Bid: {currentbid.bid}
+                    Current Bid: {currentbid.price}
                   </h2>
                   <p className="text-lg text-muted-foreground mb-2">
                     Name: {currentbid.name}
@@ -93,7 +99,7 @@ function OnGoing() {
           <div className="flex items-center">
             <Button className="flex-1">Place Bid</Button>
             <div className="flex justify-center items-center">
-              <Timer radius="60" time={time}/>
+              <Timer radius="60" time={time} />
             </div>
           </div>
           <Card className="w-full hover:shadow-lg transition-all duration-300 border border-border">
@@ -150,9 +156,16 @@ function OnGoing() {
         <div className="flex flex-col space-y-4">
           {/* Button and Timer Row */}
           <div className="flex items-center">
-            <Button className="flex-1">Place Bid</Button>
+            <Button
+              onClick={() => {
+                socket.emit("place-bid", auctionId, user);
+              }}
+              className="flex-1"
+            >
+              Place Bid
+            </Button>
             <div className="flex justify-center items-center">
-              <Timer radius="45" time={time}/>
+              <Timer radius="45" time={time} />
             </div>
           </div>
           {/* Current Bid Card */}
@@ -161,7 +174,7 @@ function OnGoing() {
               <div className="flex flex-col items-start space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold text-foreground mb-1">
-                    Current Bid: {currentbid.bid}
+                    Current Bid: {currentbid.price}
                   </h2>
                   <p className="text-lg text-muted-foreground mb-2">
                     Name: {currentbid.name}
