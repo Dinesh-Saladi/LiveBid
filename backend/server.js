@@ -214,7 +214,7 @@ setInterval(async () => {
         onGoingAuctions.delete(key);
       }
     } else {
-      if(value["curr_time"] >= 0){
+      if (value["curr_time"] >= 0) {
         io.to(key).emit("current", value);
         onGoingAuctions.set(key, value);
       }
@@ -371,6 +371,42 @@ io.on("connection", (socket) => {
     onGoingAuctions.set(auctionId, value);
     io.to(auctionId).emit("current", value);
     console.log(value);
+  });
+
+  socket.on("get-summary", async (auctionId) => {
+    try {
+      const res = await sql`
+      SELECT * FROM summary WHERE auction_id = ${auctionId}
+      `;
+      console.log(res);
+      socket.emit("take-summary", res);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("get-details", async (user_id) => {
+    try{
+      let status = "onGoing";
+      const res1 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
+      status = "upComing";
+      const res2 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
+      const res3 = await sql`SELECT * FROM items`;
+      const res4 = await sql`SELECT * FROM activity WHERE user_id = ${user_id} LIMIT 2`;
+      console.log("start");
+      console.log(res4);
+      let details = {
+        ongoing: res1.length,
+        upcoming: res2.length,
+        itemsplaced: res3.length,
+        activity: res4,
+      }
+      console.log("end");
+      console.log(details);
+      socket.emit("take-details", details);
+    }catch(e){
+      console.log(e);
+    }
   });
 });
 

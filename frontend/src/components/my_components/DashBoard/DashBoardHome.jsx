@@ -1,32 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { TrendingUp, Gavel, Trophy, Activity } from "lucide-react";
+import { TrendingUp, Gavel, Trophy, Activity, Hourglass, Box } from "lucide-react";
+import { socket, useSocketStore } from "../../../store/useSocketStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 function DashBoardHome() {
-  const stats = [
-    {
-      title: "Ongoing Auctions",
-      value: "4",
-      icon: <Gavel className="w-6 h-6" />,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
-    },
-    {
-      title: "Bids Placed",
-      value: "12",
-      icon: <TrendingUp className="w-6 h-6" />,
-      color: "text-secondary-foreground",
-      bgColor: "bg-secondary/50",
-    },
-    {
-      title: "Items Won",
-      value: "2",
-      icon: <Trophy className="w-6 h-6" />,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
-    },
-  ];
+  const { user } = useAuthStore();
+  console.log(user);
+  const [stats, setStats] = useState([]);
+
+  const [activity, setActivity] = useState([]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,6 +33,45 @@ function DashBoardHome() {
     },
   };
 
+  useEffect(() => {
+    socket.emit("get-details", user.id);
+  }, []);
+
+  useEffect(() => {
+    const HandleInfo = (details) => {
+      console.log(details.activity);
+      setActivity(details.activity);
+      setStats(() => [
+        {
+          title: "Ongoing Auctions",
+          value: details.ongoing,
+          icon: <Gavel className="w-6 h-6" />,
+          color: "text-primary",
+          bgColor: "bg-primary/10",
+        },
+        {
+          title: "Upcoming Auctions",
+          value: details.upcoming,
+          icon: <Hourglass className="w-6 h-6" />,
+          color: "text-primary",
+          bgColor: "bg-primary/10",
+        },
+        {
+          title: "Items Placed",
+          value: details.itemsplaced,
+          icon: <Box className="w-6 h-6" />,
+          color: "text-primary",
+          bgColor: "bg-primary/10",
+        },
+      ]);
+    };
+    socket.on("take-details", HandleInfo);
+
+    return () => {
+      socket.off("take-details", HandleInfo);
+    };
+  }, []);
+
   return (
     <div className="p-8 bg-background min-h-screen">
       <motion.div
@@ -60,7 +83,9 @@ function DashBoardHome() {
         <h2 className="text-4xl font-bold text-foreground mb-2">
           Welcome to LiveBid
         </h2>
-        <p className="text-muted-foreground text-lg">Your auction dashboard overview</p>
+        <p className="text-muted-foreground text-lg">
+          Your auction dashboard overview
+        </p>
       </motion.div>
 
       <motion.div
@@ -107,20 +132,43 @@ function DashBoardHome() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-secondary/20 rounded-lg">
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <div>
-                  <p className="font-medium text-foreground">You won "Bluetooth Speaker"</p>
-                  <p className="text-sm text-muted-foreground">Final bid: ₹800 • 2 hours ago</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-secondary/20 rounded-lg">
-                <div className="w-2 h-2 rounded-full bg-destructive"></div>
-                <div>
-                  <p className="font-medium text-foreground">Outbid on "Wireless Earbuds"</p>
-                  <p className="text-sm text-muted-foreground">Your bid: ₹500 • 5 hours ago</p>
-                </div>
-              </div>
+              {activity.map((act, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-4 p-4 bg-secondary/20 rounded-lg"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-primary"></div>
+                    <div>
+                      {act.status === "Bought" && (
+                        <div>
+                          <p className="font-medium text-foreground">
+                            You Bought {act.item_name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Final bid: ₹{act.price}
+                          </p>
+                        </div>
+                      )}
+                      {act.status === "Sold" && (
+                        <div>
+                          <p className="font-medium text-foreground">
+                            You Sold {act.item_name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Final bid: ₹{act.price}
+                          </p>
+                        </div>
+                      )}
+                      {act.status === "Unsold" && (
+                        <p className="font-medium text-foreground">
+                          Your Item {act.item_name} Unsold
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>

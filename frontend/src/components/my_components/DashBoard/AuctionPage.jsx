@@ -14,7 +14,7 @@ function AuctionPage() {
   const navigate = useNavigate();
   const { auctionId } = useParams();
   const { joinAuctionHandle, joinedAuction, startAuction } = useSocketStore();
-  const [status, setStatus] = useState("upComing");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -24,7 +24,7 @@ function AuctionPage() {
       navigate("/");
     });
     socket.emit("get-rooms");
-  }, [user, navigate, auctionId]);
+  }, []);
 
   useEffect(() => {
     const HandleChangeStatus = (status) => {
