@@ -36,7 +36,7 @@ function Features() {
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           Powerful Features
         </h2>
-        <p className="mx-auto max-w-[700px] text-slate-600 dark:text-slate-400 md:text-xl">
+        <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
           Everything you need to bid smarter, win faster, and trade with
           confidence.
         </p>
@@ -60,7 +60,7 @@ function Features() {
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-bold">{feature.title}</h3>
-                <p className="text-slate-600 dark:text-slate-400">
+                <p className="text-muted-foreground">
                   {feature.description}
                 </p>
               </CardContent>

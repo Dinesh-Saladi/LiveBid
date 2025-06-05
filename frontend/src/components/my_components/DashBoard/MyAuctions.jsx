@@ -33,7 +33,7 @@ function MyAuctions() {
           <BarLoader />
         </div>
       ) : (
-        <div className="p-8 bg-background min-h-screen">
+        <div className="p-6 md:p-8 bg-background min-h-screen">
           <div className="flex flex-row justify-between">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -50,7 +50,12 @@ function MyAuctions() {
             </motion.div>
             <CreateAuction />
           </div>
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-8"
+          >
             <Tabs defaultValue="onGoing" className="w-full">
               <TabsList>
                 <TabsTrigger value="onGoing">OnGoing</TabsTrigger>
@@ -67,7 +72,7 @@ function MyAuctions() {
                 <AuctionsData data={data.ended} />
               </TabsContent>
             </Tabs>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

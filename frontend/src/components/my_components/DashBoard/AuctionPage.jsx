@@ -8,6 +8,7 @@ import OnGoing from "./AuctionPage/OnGoing";
 import UpComing from "./AuctionPage/UpComing";
 import Ended from "./AuctionPage/Ended";
 import { useState } from "react";
+import BarLoader from "../BarLoader";
 
 function AuctionPage() {
   const { user } = useAuthStore();
@@ -15,8 +16,9 @@ function AuctionPage() {
   const { auctionId } = useParams();
   const { joinAuctionHandle, joinedAuction, startAuction } = useSocketStore();
   const [status, setStatus] = useState("");
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     if (!user) {
       navigate("/login");
     }
@@ -24,12 +26,13 @@ function AuctionPage() {
       navigate("/");
     });
     socket.emit("get-rooms");
-  }, []);
+  }, [auctionId]);
 
   useEffect(() => {
     const HandleChangeStatus = (status) => {
       console.log("status changed");
       console.log(status);
+      setLoading(false);
       setStatus(status);
     };
 
@@ -38,13 +41,23 @@ function AuctionPage() {
     return () => {
       socket.off("current-status", HandleChangeStatus);
     };
-  }, []);
+  }, [auctionId]);
 
-  if (!user || !joinedAuction) return null;
+  if (!user || !joinedAuction || loading)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <BarLoader />
+      </div>
+    );
 
   return (
-    <div className="p-8 bg-background min-h-screen">
-      <motion.div>
+    <div className="p-6 md:p-8 bg-background min-h-screen">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-8"
+      >
         <h2 className="text-4xl font-bold text-foreground mb-2">
           Welcome to the {joinedAuction.auction_name} Auction!
         </h2>

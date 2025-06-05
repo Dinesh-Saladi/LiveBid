@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import { useSocketStore, socket } from "../../../../store/useSocketStore";
 import { useState } from "react";
 import { useAuthStore } from "../../../../store/useAuthStore";
+import BarLoader from "../../BarLoader";
+import { motion } from "framer-motion";
 
 // const item = {
 //   name: "Keyboard",
@@ -41,18 +43,28 @@ function OnGoing() {
       socket.off("current", HandleCurrent);
     };
   }, []);
-  if (!item) return null;
+  if (!item)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <BarLoader />
+      </div>
+    );
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="flex flex-col justify-around"
+    >
       {/* laptops and tabs */}
-      <div className="hidden md:grid grid-cols-4 grid-rows-5 gap-4 m-5">
+      <div className="hidden md:grid grid-cols-4 grid-rows-5 gap-4">
         {/* Left Column: Item Details */}
         <div className="col-start-1 col-span-2 row-start-1 row-span-5">
           <Card className="hover:shadow-lg transition-all duration-300 border border-border h-full">
             <CardContent>
               <div className="flex flex-col items-start space-y-4">
                 <img
-                  className="w-full h-48 object-cover rounded-md"
+                  className="w-full max-h-[350px] object-cover rounded-md"
                   src={item.image_url}
                   alt={item.item_name}
                 />
@@ -137,7 +149,7 @@ function OnGoing() {
             <CardContent>
               <div className="flex flex-col items-start space-y-4">
                 <img
-                  className="w-full h-48 object-cover rounded-md"
+                  className="w-full h-full rounded-md"
                   src={item.image_url}
                   alt={item.item_name}
                 />
@@ -213,7 +225,7 @@ function OnGoing() {
           </Card>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

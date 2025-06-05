@@ -12,7 +12,7 @@ function NavBar() {
       transition={{ duration: 0.6, ease: "easeInOut" }}
       className="shadow-md sticky top-0 z-50 w-full border-b flex items-center justify-center bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
-      <div className="mx-2 container flex h-16 items-center justify-between">
+      <div className="mx-4 container flex h-16 items-center justify-between">
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

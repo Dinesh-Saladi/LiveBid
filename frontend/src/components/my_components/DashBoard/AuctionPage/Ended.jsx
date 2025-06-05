@@ -11,29 +11,42 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import BarLoader from "../../BarLoader";
+import { motion } from "framer-motion";
 
 function Ended() {
   const { auctionId } = useParams();
   const [summary, setSummary] = useState(null);
   useEffect(() => {
+    setSummary(null);
     socket.emit("get-summary", auctionId);
-    socket.once("take-summary", (summary) => {
+    const HandleSummary = (summary) => {
       setSummary(summary);
       console.log(summary);
-    });
-  }, []);
+    };
+    socket.on("take-summary", HandleSummary);
+    return () => {
+      socket.off("take-summary", HandleSummary);
+    };
+  }, [auctionId]);
   return (
-    <div>
+    <div className="m-0 p-0 w-full">
       {!summary ? (
         <div className="flex items-center justify-center min-h-screen">
           <BarLoader />
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-4 m-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-col items-center gap-4 mt-8"
+        >
           <div>
-            <h2 className="text-2xl font-bold">Auction Summary</h2>
+            <h2 className="text-2xl font-bold">
+              Auction Summary
+            </h2>
           </div>
-          <div className="w-full border rounded-md overflow-hidden">
+          <div className="w-full border rounded-md overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -57,7 +70,7 @@ function Ended() {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

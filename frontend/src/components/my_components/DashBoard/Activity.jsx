@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Activity as ActivityIcon } from "lucide-react";
+import { Activity as ActivityIcon, BoxIcon } from "lucide-react";
 import { socket } from "../../../store/useSocketStore";
 import { useAuthStore } from "../../../store/useAuthStore";
 import BarLoader from "../BarLoader";
@@ -31,7 +31,7 @@ function Activity() {
           <BarLoader />
         </div>
       ) : (
-        <div className="p-8 bg-background min-h-screen">
+        <div className="p-6 md:p-8 bg-background min-h-screen">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -49,18 +49,26 @@ function Activity() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-8"
           >
             <Card className="border-border">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <ActivityIcon className="w-5 h-5 text-primary" />
-                  Recent Activity
+                  <span className="text-3xl text-foreground">Recent Activity</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {activity.length == 0 && (
+                    <div className="flex flex-col items-center">
+                      <BoxIcon className="w-28 h-full text-muted-foreground" />
+                      <p className="text-muted-foreground text-lg font-medium">
+                        No Activity
+                      </p>
+                    </div>
+                  )}
                   {activity.map((act, idx) => {
                     return (
                       <div
