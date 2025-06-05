@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import CreateAuction from "./SideBar/CreateAuction";
+import JoinAuction from "./SideBar/JoinAuction";
 
 const navItems = [
   {
@@ -36,11 +38,6 @@ const navItems = [
     title: "My Activity",
     icon: <Activity className="w-5 h-5" />,
     href: "/dashboard/activity",
-  },
-  {
-    title: "Account",
-    icon: <UserCircle className="w-5 h-5" />,
-    href: "/dashboard/account",
   },
 ];
 
@@ -94,6 +91,17 @@ function SideBar() {
                 </Link>
               </li>
             ))}
+            <li className="flex text-xs items-center gap-3 font-semibold uppercase text-muted-foreground pl-2 pt-4">
+              <div className="flex-grow border-t text-muted-foreground"/>
+              <span>Quick Actions</span>
+              <div className="flex-grow border-t text-muted-foreground"/>
+            </li>
+            <li>
+              <CreateAuction vis={true} />
+            </li>
+            <li>
+              <JoinAuction vis={true} />
+            </li>
           </ul>
         </nav>
 
@@ -139,6 +147,15 @@ function SideBar() {
                 </Link>
               </li>
             ))}
+            <li>
+              <div className="flex-grow border-t text-muted-foreground"/>
+            </li>
+            <li>
+              <CreateAuction vis={false} />
+            </li>
+            <li>
+              <JoinAuction vis={false} />
+            </li>
           </ul>
         </nav>
 
@@ -174,11 +191,11 @@ function SideBar() {
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black bg-opacity-50"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          
+
           {/* Menu */}
           <div className="absolute top-0 right-0 bg-card w-64 h-full shadow-lg">
             <div className="p-4 border-b flex items-center justify-between">
@@ -211,6 +228,15 @@ function SideBar() {
                     </Link>
                   </li>
                 ))}
+                <li className="flex text-xs font-semibold uppercase text-muted-foreground pl-2 pt-4">
+                  Quick Actions
+                </li>
+                <li>
+                  <CreateAuction vis={true}/>
+                </li>
+                <li>
+                  <JoinAuction vis={true} />
+                </li>
               </ul>
             </nav>
 

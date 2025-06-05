@@ -97,7 +97,14 @@ function OnGoing() {
 
           {/* Button and Timer Row */}
           <div className="flex items-center">
-            <Button className="flex-1">Place Bid</Button>
+            <Button
+              onClick={() => {
+                socket.emit("place-bid", auctionId, user);
+              }}
+              className="flex-1"
+            >
+              Place Bid
+            </Button>
             <div className="flex justify-center items-center">
               <Timer radius="60" time={time} />
             </div>

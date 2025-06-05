@@ -34,7 +34,14 @@ function AddItems() {
   console.log(joinedAuction.id);
   function HandleSubmit() {
     console.log(name + " " + basePrice);
-    addItemHandle(name, description, user.id, joinedAuction.id, basePrice, imageUrl);
+    addItemHandle(
+      name,
+      description,
+      user.id,
+      joinedAuction.id,
+      basePrice,
+      imageUrl
+    );
     setOpen(false);
   }
   async function HandleFileChange(e) {

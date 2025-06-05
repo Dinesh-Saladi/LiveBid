@@ -196,7 +196,7 @@ setInterval(async () => {
           price: null,
         };
         value["queue"].shift();
-        value["curr_time"] = 15;
+        value["curr_time"] = 120;
         io.to(key).emit("current", value);
         onGoingAuctions.set(key, value);
       } else {
@@ -280,6 +280,7 @@ io.on("connection", (socket) => {
       SELECT * 
       FROM items i
       JOIN users u ON i.user_id = u.id
+      WHERE auction_id = ${auctionId}
       `;
       if (res.length) {
         console.log(res);
@@ -291,7 +292,7 @@ io.on("connection", (socket) => {
           email: null,
           price: null,
         };
-        value["curr_time"] = 15;
+        value["curr_time"] = 120;
         value["queue"].shift();
         console.log(value);
         // items.shift();
@@ -367,7 +368,7 @@ io.on("connection", (socket) => {
     value["bid"].id = user.id;
     value["bid"].name = user.name;
     value["bid"].email = user.email;
-    value["curr_time"] = 15;
+    value["curr_time"] = 120;
     onGoingAuctions.set(auctionId, value);
     io.to(auctionId).emit("current", value);
     console.log(value);
@@ -386,13 +387,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("get-details", async (user_id) => {
-    try{
+    try {
       let status = "onGoing";
       const res1 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
       status = "upComing";
       const res2 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
       const res3 = await sql`SELECT * FROM items`;
-      const res4 = await sql`SELECT * FROM activity WHERE user_id = ${user_id} LIMIT 2`;
+      const res4 =
+        await sql`SELECT * FROM activity WHERE user_id = ${user_id} ORDER BY id DESC LIMIT 2`;
       console.log("start");
       console.log(res4);
       let details = {
@@ -400,11 +402,74 @@ io.on("connection", (socket) => {
         upcoming: res2.length,
         itemsplaced: res3.length,
         activity: res4,
-      }
+      };
       console.log("end");
       console.log(details);
       socket.emit("take-details", details);
-    }catch(e){
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("give-data-myauctions", async (user_id) => {
+    try {
+      const data = {
+        upcoming: null,
+        ongoing: null,
+        ended: null,
+      };
+      let status = "upComing";
+      const res1 =
+        await sql`SELECT * FROM auctions WHERE user_id = ${user_id} AND status = ${status}`;
+      data.upcoming = res1;
+      status = "onGoing";
+      const res2 =
+        await sql`SELECT * FROM auctions WHERE user_id = ${user_id} AND status = ${status}`;
+      data.ongoing = res2;
+      status = "ended";
+      const res3 =
+        await sql`SELECT * FROM auctions WHERE user_id = ${user_id} AND status = ${status}`;
+      data.ended = res3;
+      console.log("data started");
+      console.log(data);
+      console.log("data ended");
+      socket.emit("take-data-myauctions", data);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("give-data-allauctions", async () => {
+    try {
+      const data = {
+        upcoming: null,
+        ongoing: null,
+        ended: null,
+      };
+      let status = "upComing";
+      const res1 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
+      data.upcoming = res1;
+      status = "onGoing";
+      const res2 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
+      data.ongoing = res2;
+      status = "ended";
+      const res3 = await sql`SELECT * FROM auctions WHERE status = ${status}`;
+      data.ended = res3;
+      console.log("data started");
+      console.log(data);
+      console.log("data ended");
+      socket.emit("take-data-allauctions", data);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("get-activity-details", async (user_id) => {
+    try {
+      const res = await sql`SELECT * FROM activity WHERE user_id = ${user_id} ORDER BY id DESC`;
+      console.log(res);
+      socket.emit("take-activity-details", res);
+    } catch (e) {
       console.log(e);
     }
   });

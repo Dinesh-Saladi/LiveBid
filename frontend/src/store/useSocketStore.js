@@ -30,7 +30,7 @@ export const useSocketStore = create((set, get) => ({
 
     socket.once("joined-auction", (auctionDetails) => {
       console.log("Joined the " + auctionDetails.name + " Auction");
-      set({joinedAuction: auctionDetails});
+      set({ joinedAuction: auctionDetails });
       console.log(get().joinedAuction);
     });
 
@@ -44,15 +44,30 @@ export const useSocketStore = create((set, get) => ({
 
     socket.once("cannot-start", () => {
       console.log("There should be atleast 1 item to start");
-    })
+    });
   },
   getCurrentItem: (auctionId, setCurrent) => {
     socket.once("current", (value) => {
       setCurrent(value);
     });
   },
-  addItemHandle: (name, description, userId, auctionId, basePrice, imageUrl) => {
-    socket.emit("add-item", name, description, userId, auctionId, basePrice, imageUrl);
+  addItemHandle: (
+    name,
+    description,
+    userId,
+    auctionId,
+    basePrice,
+    imageUrl
+  ) => {
+    socket.emit(
+      "add-item",
+      name,
+      description,
+      userId,
+      auctionId,
+      basePrice,
+      imageUrl
+    );
 
     socket.once("added", () => {
       console.log("item added succesfully");
@@ -73,5 +88,5 @@ export const useSocketStore = create((set, get) => ({
     socket.once("error-getting-items", (e) => {
       console.log(e);
     });
-  }
+  },
 }));

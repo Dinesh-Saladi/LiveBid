@@ -96,20 +96,6 @@ export default function Login() {
               </div>
             </div>
           </form>
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-300" />
-            <span className="mx-4 text-sm text-gray-500">or</span>
-            <div className="flex-grow border-t border-gray-300" />
-          </div>
-          <div>
-            <Button
-              variant="outline"
-              className="w-full cursor-pointer"
-              type="submit"
-            >
-              Continue with Google
-            </Button>
-          </div>
         </CardContent>
         <CardFooter className="flex justify-center items-center gap-2 mt-4">
           <p className="text-sm text-center">Don't have an account?</p>

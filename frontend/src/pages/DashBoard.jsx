@@ -9,7 +9,6 @@ import DashBoardHome from "../components/my_components/DashBoard/DashBoardHome";
 import MyAuctions from "../components/my_components/DashBoard/MyAuctions";
 import AllAuctions from "../components/my_components/DashBoard/AllAuctions";
 import Activity from "../components/my_components/DashBoard/Activity";
-import Account from "../components/my_components/DashBoard/Account";
 import AuctionPage from "../components/my_components/DashBoard/AuctionPage";
 
 // Placeholder components for different sections
@@ -22,7 +21,7 @@ function DashBoard() {
     if (!user) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, []);
 
   if (!user) return null;
 
@@ -36,7 +35,6 @@ function DashBoard() {
           <Route path="/my-auctions" element={<MyAuctions />} />
           <Route path="/auctions" element={<AllAuctions />} />
           <Route path="/activity" element={<Activity />} />
-          <Route path="/account" element={<Account />} />
           <Route path="/auction/:auctionId" element={<AuctionPage/>} />
         </Routes>
       </main>

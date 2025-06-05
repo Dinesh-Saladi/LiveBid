@@ -6,69 +6,46 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { BoxIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const products = [
-  {
-    id: 101,
-    name: "Wireless Headphones",
-    category: "Electronics",
-    price: 59.99,
-    rating: 4.5,
-  },
-  {
-    id: 102,
-    name: "Yoga Mat",
-    category: "Sports & Fitness",
-    price: 25.0,
-    rating: 4.8,
-  },
-  {
-    id: 103,
-    name: "Coffee Maker",
-    category: "Home Appliances",
-    price: 80.0,
-    rating: 4.2,
-  },
-  {
-    id: 104,
-    name: "Running Shoes",
-    category: "Sportswear",
-    price: 70.0,
-    rating: 4.6,
-  },
-  {
-    id: 105,
-    name: "Smartwatch",
-    category: "Electronics",
-    price: 120.0,
-    rating: 4.7,
-  },
-];
-function AuctionsData() {
+function AuctionsData({ data }) {
+  const navigate = useNavigate();
   return (
-    <div className="w-full border rounded-md overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="pl-4">ID</TableHead>
-            <TableHead>Product Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Price (USD)</TableHead>
-            <TableHead>Rating</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id} className="odd:bg-muted/50">
-              <TableCell className="pl-4">{product.id}</TableCell>
-              <TableCell className="font-medium">{product.name}</TableCell>
-              <TableCell>{product.category}</TableCell>
-              <TableCell>{product.price}</TableCell>
-              <TableCell>{product.rating}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div>
+      {data.length ? (
+        <div className="w-full border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">ID</TableHead>
+                <TableHead>Auction Name</TableHead>
+                <TableHead>Category</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.map((d) => (
+                <TableRow
+                  key={d.id}
+                  onClick={() => navigate(`/dashboard/auction/${d.id}`)}
+                  className="odd:bg-muted/50 cursor-pointer"
+                >
+                  <TableCell className="pl-4">{d.id}</TableCell>
+                  <TableCell className="font-medium">
+                    {d.auction_name}
+                  </TableCell>
+                  <TableCell>{d.auction_category}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center m-30 gap-3">
+          <BoxIcon className="w-48 h-full text-muted-foreground" />
+          <p className="text-muted-foreground text-2xl font-medium">Empty</p>
+        </div>
+      )}
     </div>
   );
 }
