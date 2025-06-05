@@ -8,6 +8,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import NotFound from "./pages/NotFound";
+import BarLoader from "./components/my_components/BarLoader";
 
 axios.defaults.withCredentials = true;
 
@@ -25,7 +26,13 @@ function App() {
         setUser(null);
       });
   }, []);
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-background items-center justify-center">
+        <BarLoader />
+      </div>
+    );
+  }
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <Router>

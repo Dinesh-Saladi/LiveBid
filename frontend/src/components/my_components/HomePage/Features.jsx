@@ -56,7 +56,7 @@ function Features() {
               className="sm:m-0 m-2 h-full flex flex-col transition-all cursor-pointer duration-300 hover:shadow-lg"
             >
               <CardContent className="p-6 space-y-4">
-                <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-3 w-fit">
+                <div className="rounded-full bg-primary/10 p-3 w-fit">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-bold">{feature.title}</h3>
