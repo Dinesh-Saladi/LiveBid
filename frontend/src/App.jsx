@@ -26,24 +26,23 @@ function App() {
         setUser(null);
       });
   }, []);
-  if (loading) {
-    return (
-      <div className="flex min-h-screen bg-background items-center justify-center">
-        <BarLoader />
-      </div>
-    );
-  }
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard/*" element={<DashBoard />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+      {loading ? (
+        <div className="flex min-h-screen items-center justify-center">
+          <BarLoader />
+        </div>
+      ) : (
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/dashboard/*" element={<DashBoard />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      )}
     </ThemeProvider>
   );
 }
