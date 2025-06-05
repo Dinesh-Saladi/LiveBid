@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import pattern from "../assets/pattern.svg";
 
 function Hero() {
   return (
     <section className="relative">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
         <img
-          alt="background"
-          src="../src/assets/pattern.svg"
+          src={pattern}
+          alt="Pattern"
           className="[mask-image:radial-gradient(50%_50%_at_center,white,transparent)] opacity-90 dark:opacity-40"
         />
       </div>
