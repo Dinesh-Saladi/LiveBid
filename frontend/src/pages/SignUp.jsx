@@ -76,7 +76,7 @@ export default function SignUp() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter email"
+                  placeholder="Enter name"
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
