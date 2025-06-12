@@ -47,6 +47,7 @@ app.use(morgan("dev"));
 app.use(flash());
 
 if (process.env.NODE_ENV === "vercel") {
+  app.set("trust proxy", 1);
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
