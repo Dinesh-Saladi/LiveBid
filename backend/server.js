@@ -32,17 +32,19 @@ const io = new Server(server, {
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL, // your frontend origin
-    credentials: true, // allow cookies to be sent
-  })
-);
+if (process.env.NODE_ENV !== "vercel") {
+  app.use(
+    cors({
+      origin: process.env.FRONTEND_URL, // your frontend origin
+      credentials: true, // allow cookies to be sent
+    })
+  );
+}
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(flash());
 
-if(process.env.NODE_ENV === "vercel"){
+if (process.env.NODE_ENV === "vercel") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
   app.get(/(.*)/, (req, res) => {
@@ -60,7 +62,7 @@ if(process.env.NODE_ENV === "vercel"){
     })
   );
 
-}else if (process.env.NODE_ENV === "production") {
+} else if (process.env.NODE_ENV === "production") {
   //FOR DEPLOYMENT SESSION
   app.set("trust proxy", 1);
   app.use(
