@@ -12,6 +12,7 @@ import initializePassport from "./config/passport.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { nanoid } from "nanoid";
+import path from "path";
 
 initializePassport(passport); // Passport configuration
 
@@ -19,6 +20,7 @@ dotenv.config();
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT;
+const __dirname = path.resolve();
 
 const io = new Server(server, {
   cors: {
@@ -40,7 +42,25 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(flash());
 
-if (process.env.NODE_ENV === "production") {
+if(process.env.NODE_ENV === "vercel"){
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get(/(.*)/, (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
+      },
+    })
+  );
+
+}else if (process.env.NODE_ENV === "production") {
   //FOR DEPLOYMENT SESSION
   app.set("trust proxy", 1);
   app.use(
@@ -74,9 +94,9 @@ if (process.env.NODE_ENV === "production") {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello, World!");
+// });
 
 app.use("/api/auth", authRoutes);
 
@@ -466,7 +486,8 @@ io.on("connection", (socket) => {
 
   socket.on("get-activity-details", async (user_id) => {
     try {
-      const res = await sql`SELECT * FROM activity WHERE user_id = ${user_id} ORDER BY id DESC`;
+      const res =
+        await sql`SELECT * FROM activity WHERE user_id = ${user_id} ORDER BY id DESC`;
       console.log(res);
       socket.emit("take-activity-details", res);
     } catch (e) {
