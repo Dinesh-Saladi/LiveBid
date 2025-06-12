@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_API + "/api";
+const BASE_URL = (import.meta.env.VITE_BACKEND_API || "") + "/api";
 
 export const useAuthStore = create((set, get) => ({
   user: null,

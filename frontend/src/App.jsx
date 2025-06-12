@@ -12,7 +12,7 @@ import BarLoader from "./components/my_components/BarLoader";
 
 axios.defaults.withCredentials = true;
 
-const BASE_URL = import.meta.env.VITE_BACKEND_API + "/api";
+const BASE_URL = (import.meta.env.VITE_BACKEND_API || "") + "/api";
 
 function App() {
   const { setUser, loading } = useAuthStore();

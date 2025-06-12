@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-export const socket = io(import.meta.env.VITE_BACKEND_API);
+export const socket = io((import.meta.env.VITE_BACKEND_API || ""));
 
 export const useSocketStore = create((set, get) => ({
   joinedAuction: null,
