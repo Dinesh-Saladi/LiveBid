@@ -39,18 +39,14 @@ if (process.env.NODE_ENV !== "vercel") {
       credentials: true, // allow cookies to be sent
     })
   );
+}else{
+  app.use(cors());
 }
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(flash());
 
 if (process.env.NODE_ENV === "vercel") {
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-  app.get(/(.*)/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-  });
-
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
@@ -61,6 +57,13 @@ if (process.env.NODE_ENV === "vercel") {
       },
     })
   );
+
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get(/(.*)/, (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+
 
 } else if (process.env.NODE_ENV === "production") {
   //FOR DEPLOYMENT SESSION
@@ -73,9 +76,8 @@ if (process.env.NODE_ENV === "vercel") {
       cookie: {
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
         secure: true, // Required for HTTPS
-        sameSite: "None", // Required for cross-origin
+        sameSite: "Lax", // Required for cross-origin
         httpOnly: true, // Optional, for security
-        domain: process.env.BACKEND_DOMAIN, // Optional, for cross-origin
       },
     })
   );
